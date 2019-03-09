@@ -1,23 +1,42 @@
-<template>
-  <header>
-    <div class="text-box">
-      <h1>La Recipes 😋</h1>
-      <p class="mt-3">Recipes for the meals we love ❤️ ️</p>
-      <nuxt-link class="btn btn-outline btn-large btn-info" to="/recipes">
-        View Recipes <span class="ml-2">&rarr;</span>
-      </nuxt-link>
-    </div>
-  </header>
-</template>
 <script>
+import RecipeCard from "~/components/RecipeCard.vue";
+
 export default {
   head() {
     return {
-      title: "Home page"
+      title: "Recipes list"
     };
   },
+  components: {
+    RecipeCard
+  },
+  async asyncData({ $axios, params }) {
+    try {
+      let recipes = await $axios.$get(`/recipes/`);
+      return { recipes };
+    } catch (e) {
+      return { recipes: [] };
+    }
+  },
+  data() {
+    return {
+      recipes: []
+    };
+  },
+  methods: {
+    async deleteRecipe(recipe_id) {
+      try {
+        await this.$axios.$delete(`/recipes/${recipe_id}/`); // delete recipe
+        let newRecipes = await this.$axios.$get("/recipes/"); // get new list of recipes
+        this.recipes = newRecipes; // update list of recipes
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }
 };
 </script>
+
 <style>
 header {
   min-height: 100vh;

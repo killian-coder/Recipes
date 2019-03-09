@@ -56,3 +56,8 @@ module.exports = {
     }
   }
 }
+
+ // add this Axios object
+ axios: {
+  baseURL: "http://localhost:8000/api"
+},
